@@ -1,0 +1,16 @@
+service: aws-python-fastapi
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: ap-northeast-2
+  runtime: python3.9
+
+functions:
+  hello:
+    handler: main.handler
+    events:
+      - httpApi: '*'
+
+plugins:
+  - serverless-python-requirements

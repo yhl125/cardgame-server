@@ -1,0 +1,32 @@
+name: Deploy test
+
+on:
+  push:
+    branches:
+      - feature/aws-lambda # this is for test, later change to master
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Create env file
+      run: |
+        echo "${{ secrets.ENV_FILE }}" > .env
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip' # caching pip dependencies
+    - run: pip install -r requirements.txt
+
+    - name: Install Plugin and Deploy
+      uses: serverless/github-action@v3.1
+      with:
+        args: -c "serverless plugin install --name <plugin-name> && serverless deploy"
+        entrypoint: /bin/sh
+      env:
+         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
