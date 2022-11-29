@@ -12,5 +12,5 @@ functions:
     events:
       - httpApi: '*'
 
-plugins:
-  - serverless-python-requirements
+#plugins:
+#  - serverless-python-requirements
