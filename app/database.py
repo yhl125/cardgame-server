@@ -2,8 +2,8 @@ import certifi
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from config import settings
-from models.sample import Sample
+from app.config import settings
+from app.models.sample import Sample
 
 
 async def init_db():

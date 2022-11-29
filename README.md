@@ -8,7 +8,7 @@ pip install -r requirements.txt
 ## run server
 #### localhost
 ```
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 

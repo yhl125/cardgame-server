@@ -16,23 +16,19 @@ jobs:
 
     - name: Create env file
       run: |
-        echo "${{ secrets.ENV_FILE }}" > .env
+        echo "${{ secrets.ENV_JSON }}" > env.json
 
     - uses: actions/setup-python@v4
       with:
         python-version: '3.9'
-        cache: 'pip' # caching pip dependencies
-    - run: pip install -r requirements.txt
 
-#    - name: Install Plugin and Deploy
-#      uses: serverless/github-action@v3.1
-#      with:
-#        args: -c "serverless plugin install --name serverless-python-requirements && serverless deploy"
-#        entrypoint: /bin/sh
-    - name: serverless deploy
-      uses: serverless/github-action@v3.1
+    - uses: aws-actions/setup-sam@v2
+    - uses: aws-actions/configure-aws-credentials@v1
       with:
-        args: deploy
-      env:
-         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+      # Build inside Docker containers
+    - run: sam build --use-container --container-env-var-file env.json
+      # Prevent prompts and failure when the stack is unchanged
+    - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
