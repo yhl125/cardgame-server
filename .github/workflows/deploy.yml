@@ -1,4 +1,5 @@
 name: Deploy test
+concurrency: Production
 
 on:
   push:
@@ -9,6 +10,7 @@ jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
+    environment: Production
     steps:
     - uses: actions/checkout@v3
 
