@@ -7,10 +7,15 @@ provider:
   runtime: python3.9
 
 functions:
-  hello:
+  main:
     handler: main.handler
-    events:
-      - httpApi: '*'
+    events: # All events associated with this function
+      - httpApi: 'GET /'
+      - httpApi: 'GET /sample'
+      - httpApi: 'GET /sample/all'
+      - httpApi: 'POST /sample'
+      - httpApi: 'PUT /sample'
+      - httpApi: 'DELETE /sample'
 
 #plugins:
 #  - serverless-python-requirements
