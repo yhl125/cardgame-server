@@ -4,7 +4,7 @@ concurrency: Production
 on:
   push:
     branches:
-      - feature/aws-lambda # this is for test, later change to master
+      - master
 
 jobs:
   deploy:
