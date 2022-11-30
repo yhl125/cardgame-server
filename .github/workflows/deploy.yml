@@ -27,4 +27,6 @@ jobs:
       # Build inside Docker containers
     - run: sam build --use-container
       # Prevent prompts and failure when the stack is unchanged
-    - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides MongoUri=${{ secrets.MONGO_URI }}
+    - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides MongoUri=$mongo-uri
+      env:
+        mongo-uri: ${{ secrets.MONGO_URI }}
