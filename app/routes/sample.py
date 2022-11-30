@@ -1,7 +1,7 @@
 from beanie import PydanticObjectId
 from fastapi import APIRouter
 
-from models.sample import Sample
+from app.models.sample import Sample
 
 router = APIRouter(prefix="/sample", tags=["Sample"])
 
