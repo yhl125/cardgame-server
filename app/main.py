@@ -3,6 +3,7 @@ from mangum import Mangum
 
 from app.database import init_db
 from app.routes.sample import router as sample_router
+from app.routes.user import router as user_router
 
 app = FastAPI()
 
@@ -18,5 +19,6 @@ def index():
 
 
 app.include_router(sample_router)
+app.include_router(user_router)
 
 handler = Mangum(app)
