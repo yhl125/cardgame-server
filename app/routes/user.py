@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi.responses import PlainTextResponse
 from fastapi_login.exceptions import InvalidCredentialsException
 from pydantic import BaseModel
 
@@ -12,7 +13,7 @@ class UserLoginForm(BaseModel):
     password: str
 
 
-@router.post('/login')
+@router.post('/login', response_class=PlainTextResponse)
 async def login(data: UserLoginForm):
     name = data.name
     password = data.password
@@ -43,6 +44,6 @@ async def me(user=Depends(user_service.manager)):
     return user
 
 
-@router.get('/logged_in')
+@router.get('/logged_in', response_class=PlainTextResponse)
 async def logged_in(user=Depends(user_service.manager)):
     return "If not logged in, you will not see this message"
