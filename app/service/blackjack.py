@@ -93,8 +93,8 @@ class Deck:
         random.shuffle(self.deck)
 
 
-async def create_game(user: User):
-    game = BlackjackGame()
+async def create_game(user: User, name: str):
+    game = BlackjackGame(name=name)
     player = BlackjackPlayer(name=user.name)
     game.players.append(player)
     return await game.insert()
