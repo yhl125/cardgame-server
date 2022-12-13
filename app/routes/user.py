@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, HTTPException
 from fastapi.responses import PlainTextResponse
 from fastapi_login.exceptions import InvalidCredentialsException
 from pydantic import BaseModel
@@ -20,7 +20,7 @@ async def login(data: UserLoginForm):
 
     user = await user_service.load_user(name)
     if not user:
-        raise Exception('User not exist')
+        raise HTTPException(status_code=400, detail='User not exist')
     elif not user_service.check_password(password, user.password):
         raise InvalidCredentialsException
 
@@ -34,7 +34,7 @@ async def login(data: UserLoginForm):
 async def signup(data: UserLoginForm):
     user = await user_service.load_user(data.name)
     if user:
-        raise Exception('User already exists')
+        raise HTTPException(status_code=400, detail='User already exists')
 
     return await user_service.create_user(data.name, data.password)
 
