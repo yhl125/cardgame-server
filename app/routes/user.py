@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from fastapi.responses import PlainTextResponse
 from fastapi_login.exceptions import InvalidCredentialsException
 from pydantic import BaseModel
@@ -47,3 +47,13 @@ async def me(user=Depends(user_service.manager)):
 @router.get('/logged_in', response_class=PlainTextResponse)
 async def logged_in(user=Depends(user_service.manager)):
     return "If not logged in, you will not see this message"
+
+
+@router.post('/money/deposit')
+async def deposit_money(user=Depends(user_service.manager), amount: int = Body()):
+    return await user_service.deposit_money(user, amount)
+
+
+@router.post('/money/withdraw')
+async def withdraw_money(user=Depends(user_service.manager), amount: int = Body()):
+    return await user_service.withdraw_money(user, amount)
