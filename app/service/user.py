@@ -29,3 +29,15 @@ async def create_user(name: str, password: str):
 
 def check_password(password: str, hashed_password):
     return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+
+
+async def deposit_money(user: User, amount: int):
+    user.money += amount
+    await user.save()
+    return user
+
+
+async def withdraw_money(user: User, amount: int):
+    user.money -= amount
+    await user.save()
+    return user
