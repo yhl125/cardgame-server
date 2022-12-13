@@ -32,6 +32,7 @@ class GameStatus(str, Enum):
 
 
 class BlackjackGame(Document):
+    name: str
     players: list[BlackjackPlayer] = []
     deck: list = []
     dealerHand: list = []

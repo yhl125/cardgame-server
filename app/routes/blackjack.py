@@ -17,8 +17,8 @@ async def find_all_created_game():
 
 
 @router.post("/create")
-async def create_game(user=Depends(user_service.manager)):
-    return await blackjack_service.create_game(user)
+async def create_game(user=Depends(user_service.manager), name: str = Body()):
+    return await blackjack_service.create_game(user, name)
 
 
 @router.post("/enter")
