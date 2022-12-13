@@ -11,7 +11,7 @@ async def get_game(game_id: str):
     return await blackjack_service.get_game(game_id)
 
 
-@router.get("/game/all", response_model=blackjack_service.BlackjackGame)
+@router.get("/game/all")
 async def find_all_created_game():
     return await blackjack_service.find_all_created_game()
 
