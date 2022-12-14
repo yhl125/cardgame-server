@@ -120,12 +120,12 @@ async def ready(user: User, game_id: str):
         if player.name == user.name:
             player.status = PlayerStatus.READY
             break
+    await game.save()
 
     # if all players are ready, start the game
     if all(player.status == PlayerStatus.READY for player in game.players):
         await start_game(game)
 
-    await game.save()
     return await get_game(game_id)
 
 
@@ -166,9 +166,9 @@ async def bet(user: User, game_id: str, bet_money: int):
                 raise HTTPException(status_code=400, detail="Not enough money")
             player.bet = bet_money
             break
+    await game.save()
     await draw_card(game_id, user)
     game = await draw_card(game_id, user)
-    await game.save()
     if all(player.bet > 0 for player in game.players):
         await dealer_draw_and_wait(game)
     return await get_game(game_id)
@@ -209,11 +209,11 @@ async def stand(user: User, game_id: str):
         if player.name == user.name:
             player.status = PlayerStatus.STAND
             break
+    await game.save()
     if all(player.status == PlayerStatus.STAND for player in game.players):
         while adjust_for_ace(game.dealerHand) < 17:
             await draw_card_dealer(game)
-        game = await check_result(game)
-    await game.save()
+        await check_result(game)
     return await get_game(game_id)
 
 
@@ -231,11 +231,11 @@ async def double_down(user: User, game_id: str):
             player.hand.append(game.deck.pop())
             player.status = PlayerStatus.STAND
             break
+    await game.save()
     if all(player.status == PlayerStatus.STAND for player in game.players):
         while adjust_for_ace(game.dealerHand) < 17:
             await draw_card_dealer(game)
-        game = await check_result(game)
-    await game.save()
+        await check_result(game)
     return await get_game(game_id)
 
 
@@ -331,9 +331,9 @@ async def leave_game(user: User, game_id: str):
             if player.name == user.name:
                 game.players.remove(player)
                 break
-        if all(player.status == PlayerStatus.READY for player in game.players):
-            game = await start_game(game)
         await game.save()
+        if all(player.status == PlayerStatus.READY for player in game.players):
+            await start_game(game)
     else:
         raise HTTPException(status_code=400, detail="game already started")
     return "successfully left game"
