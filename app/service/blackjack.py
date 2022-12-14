@@ -166,9 +166,9 @@ async def bet(user: User, game_id: str, bet_money: int):
                 raise HTTPException(status_code=400, detail="Not enough money")
             player.bet = bet_money
             break
+    await game.save()
     await draw_card(game_id, user)
     game = await draw_card(game_id, user)
-    await game.save()
     if all(player.bet > 0 for player in game.players):
         await dealer_draw_and_wait(game)
     return await get_game(game_id)
