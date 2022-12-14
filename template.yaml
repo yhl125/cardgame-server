@@ -7,9 +7,9 @@ Parameters:
     Type: String
     Description: MongoDB URI
     Default: default value
-  ACCESS_TOKEN_KEY:
+  AccessTokenKey:
     Type: String
-    Description: ACCESS_TOKEN_KEY
+    Description: AccessTokenKey
     Default: default value
 
 
@@ -24,7 +24,7 @@ Resources:
         Variables:
           ENV_STATE: prod
           MONGO_URI: !Ref MongoUri
-          ACCESS_TOKEN_KEY: !Ref ACCESS_TOKEN_KEY
+          ACCESS_TOKEN_KEY: !Ref AccessTokenKey
       Events:
         Api:
           Type: HttpApi
