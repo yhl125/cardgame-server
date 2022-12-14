@@ -10,7 +10,7 @@ Parameters:
   AccessTokenKey:
     Type: String
     Description: AccessTokenKey
-    Default: default value
+    Default: master
 
 
 Resources:
