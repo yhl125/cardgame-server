@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-import bcrypt
 from fastapi_login import LoginManager
 
 from app.config import settings
@@ -21,14 +20,14 @@ def create_access_token(data: dict):
 
 
 async def create_user(name: str, password: str):
-    encrypted_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    user = User(name=name, password=encrypted_password)
+    # encrypted_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    user = User(name=name, password=password)
     await user.insert()
     return user
 
 
-def check_password(password: str, hashed_password):
-    return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+# def check_password(password: str, hashed_password):
+#     return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
 
 
 async def deposit_money(user: User, amount: int):
