@@ -335,7 +335,7 @@ async def leave_game(user: User, game_id: str):
             game = await start_game(game)
         await game.save()
     else:
-        raise HTTPException(status_code=400, detail="game is not created or end")
+        raise HTTPException(status_code=400, detail="game already started")
     return "successfully left game"
 
 
