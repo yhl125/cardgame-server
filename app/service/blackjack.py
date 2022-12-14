@@ -129,6 +129,19 @@ async def ready(user: User, game_id: str):
     return await get_game(game_id)
 
 
+async def undo_ready(user: User, game_id: str):
+    game = await BlackjackGame.get(PydanticObjectId(game_id))
+    if game.status != GameStatus.CREATED and game.status != GameStatus.END:
+        raise HTTPException(status_code=400, detail="already started")
+    for player in game.players:
+        if player.name == user.name:
+            player.status = PlayerStatus.ENTER
+            break
+
+    await game.save()
+    return await get_game(game_id)
+
+
 async def start_game(game: BlackjackGame):
     game.status = GameStatus.WAITING_BET
     deck = Deck()
@@ -194,6 +207,28 @@ async def stand(user: User, game_id: str):
         raise HTTPException(status_code=400, detail="game is not waiting choice")
     for player in game.players:
         if player.name == user.name:
+            player.status = PlayerStatus.STAND
+            break
+    if all(player.status == PlayerStatus.STAND for player in game.players):
+        while adjust_for_ace(game.dealerHand) < 17:
+            await draw_card_dealer(game)
+        game = await check_result(game)
+    await game.save()
+    return await get_game(game_id)
+
+
+async def double_down(user: User, game_id: str):
+    game = await BlackjackGame.get(PydanticObjectId(game_id))
+    if game.status != GameStatus.WAITING_CHOICE:
+        raise HTTPException(status_code=400, detail="game is not waiting choice")
+    for player in game.players:
+        if player.name == user.name:
+            if user.money < player.bet:
+                raise HTTPException(status_code=400, detail="Not enough money")
+            if len(player.hand) != 2:
+                raise HTTPException(status_code=400, detail="can't double down")
+            player.bet *= 2
+            player.hand.append(game.deck.pop())
             player.status = PlayerStatus.STAND
             break
     if all(player.status == PlayerStatus.STAND for player in game.players):
@@ -300,7 +335,7 @@ async def leave_game(user: User, game_id: str):
             game = await start_game(game)
         await game.save()
     else:
-        raise HTTPException(status_code=400, detail="game is not created or end")
+        raise HTTPException(status_code=400, detail="game already started")
     return "successfully left game"
 
 

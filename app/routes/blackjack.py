@@ -31,6 +31,11 @@ async def ready_game(user=Depends(user_service.manager), game_id: str = Body()):
     return await blackjack_service.ready(user, game_id)
 
 
+@router.post("/ready/undo")
+async def undo_ready_game(user=Depends(user_service.manager), game_id: str = Body()):
+    return await blackjack_service.undo_ready(user, game_id)
+
+
 @router.post("/bet")
 async def bet_game(user=Depends(user_service.manager), game_id: str = Body(), bet: int = Body()):
     return await blackjack_service.bet(user, game_id, bet)
@@ -44,6 +49,11 @@ async def hit(user=Depends(user_service.manager), game_id: str = Body()):
 @router.post("/stand")
 async def stand(user=Depends(user_service.manager), game_id: str = Body()):
     return await blackjack_service.stand(user, game_id)
+
+
+@router.post("/double_down")
+async def double_down(user=Depends(user_service.manager), game_id: str = Body()):
+    return await blackjack_service.double_down(user, game_id)
 
 
 @router.post("/game/leave")
